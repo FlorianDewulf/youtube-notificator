@@ -1,0 +1,32 @@
+{
+  "name": "youtube-notificator",
+  "version": "0.0.1",
+  "description": "Notify social network of new videos",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlorianDewulf/youtube-notificator.git"
+  },
+  "keywords": [
+    "youtube",
+    "notification",
+    "social",
+    "networks"
+  ],
+  "author": "Lund",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlorianDewulf/youtube-notificator/issues"
+  },
+  "homepage": "https://github.com/FlorianDewulf/youtube-notificator#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "google-auth-library": "^3.0.1",
+    "googleapis": "^37.1.0",
+    "moment": "^2.24.0",
+    "twitter": "^1.7.1"
+  }
+}

@@ -59,3 +59,7 @@ typings/
 
 # next.js build output
 .next
+
+# Config
+config/client_secret.json
+config/youtube-nodejs.json
