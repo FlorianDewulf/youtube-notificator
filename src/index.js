@@ -11,9 +11,9 @@ let twitter = new Twitter()
  * Retrieve the videos and notify thanks to Twitter
  */
 function notify () {
-  callAPI(null).then((items) => {
+  callAPI(null).then((result) => {
     // Tweet the new videos
-    twitter.tweetNotifs(items)
+    twitter.tweetNotifs(result.items)
     lastCall = moment()
   }).catch((e) => {
     console.log(e)
