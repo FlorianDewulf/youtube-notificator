@@ -4,7 +4,7 @@ const Youtube = require('./Youtube.js')
 const Twitter = require('./Twitter.js')
 
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') })
-let lastCall = moment().subtract(process.env.MINUTE_INTERVAL, 'minutes')
+let lastCall = moment().utc().subtract(process.env.MINUTE_INTERVAL, 'minutes')
 let twitter = new Twitter()
 
 /**
@@ -14,7 +14,7 @@ function notify () {
   callAPI(null).then((result) => {
     // Tweet the new videos
     twitter.tweetNotifs(result.items)
-    lastCall = moment()
+    lastCall = moment().utc()
   }).catch((e) => {
     console.log(e)
   })

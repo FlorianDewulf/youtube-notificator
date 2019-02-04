@@ -173,7 +173,7 @@ class Youtube {
    * @return {Array<Object>}
    */
   processItems (items, lastCall) {
-    const now = moment()
+    const now = moment().utc()
     const filterdItems = items.filter((item) => {
       return moment(item.snippet.publishedAt).isBetween(lastCall, now)
     })
@@ -184,6 +184,7 @@ class Youtube {
           link: `https://www.youtube.com/watch?v=${item.id.videoId}`
         }
       }),
+      // utc to add somewhere ?
       shouldRecall: (items.length && moment(items[items.length - 1].snippet.publishedAt).isBetween(lastCall, now))
     }
   }
