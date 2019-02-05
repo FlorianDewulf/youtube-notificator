@@ -1,4 +1,3 @@
-const moment = require('moment')
 const fs = require('fs')
 const path = require('path')
 const readline = require('readline')
@@ -130,21 +129,18 @@ class Youtube {
 
   /**
    * Retrieve the videos
-   * @param {Moment} lastCall The last time it has been called
+   * @param {string} lastId The last id which has been retrieved
    * @param {String} pageToken The last page token, useful for the pagination
    * @return {Promise<Object>}
    */
-  getNewVideos (lastCall, pageToken = null) {
+  getNewVideos (lastId, pageToken = null) {
     let service = google.youtube({ version: 'v3', auth: this.auth })
     let param = {
       part: 'snippet,id',
       channelId: this.channelId,
       maxResults: process.env.YT_MAX_RESULT,
       type: 'video',
-      order: 'date',
-      // IT DOESN'T WORK, THANKS GOOGLE
-      // publishedBefore: `${moment().format('YYYY-MM-DDTHH:mm:ss')}Z`
-      // publishedAfter: `${lastCall.format('YYYY-MM-DDTHH:mm:ss')}Z`
+      order: 'date'
     }
     if (pageToken) {
       param.pageToken = pageToken
@@ -155,7 +151,7 @@ class Youtube {
           reject(err)
           return
         }
-        let processResult = this.processItems(response.data.items, lastCall)
+        let processResult = this.processItems(response.data.items, lastId)
 
         resolve({
           items: processResult.items,
@@ -169,23 +165,29 @@ class Youtube {
   /**
    * Transform the items
    * @param {Array} items The videos items retrieved
-   * @param {Moment} lastCall The last time the videos have been retrieved
+   * @param {string} lastId The last id which has been retrieved
    * @return {Array<Object>}
    */
-  processItems (items, lastCall) {
-    const now = moment().utc()
-    const filterdItems = items.filter((item) => {
-      return moment(item.snippet.publishedAt).isBetween(lastCall, now)
-    })
+  processItems (items, lastId) {
+    let filteredItems = []
+    
+    for (let item of items) {
+      if (item.id.videoId === lastId) {
+        break
+      } else {
+        filteredItems.push(item)
+      }
+    }
+    console.log('filteredItems : ', filteredItems)
     return {
-      items: filterdItems.map((item) => {
+      items: filteredItems.map((filteredItem) => {
         return {
-          title: item.snippet.title,
-          link: `https://www.youtube.com/watch?v=${item.id.videoId}`
+          id: filteredItem.id.videoId,
+          title: filteredItem.snippet.title,
+          link: `https://www.youtube.com/watch?v=${filteredItem.id.videoId}`
         }
       }),
-      // utc to add somewhere ?
-      shouldRecall: (items.length && moment(items[items.length - 1].snippet.publishedAt).isBetween(lastCall, now))
+      shouldRecall: filteredItems.length === items.length
     }
   }
 }

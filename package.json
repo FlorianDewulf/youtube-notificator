@@ -26,7 +26,6 @@
     "dotenv": "^6.2.0",
     "google-auth-library": "^3.0.1",
     "googleapis": "^37.1.0",
-    "moment": "^2.24.0",
     "twitter": "^1.7.1"
   }
 }

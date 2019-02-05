@@ -1,20 +1,26 @@
 const path = require('path')
-const moment = require('moment')
 const Youtube = require('./Youtube.js')
 const Twitter = require('./Twitter.js')
 
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') })
-let lastCall = moment().utc().subtract(process.env.MINUTE_INTERVAL, 'minutes')
+let lastId = null
 let twitter = new Twitter()
 
+console.log('LAST ID', lastId)
 /**
  * Retrieve the videos and notify thanks to Twitter
  */
 function notify () {
   callAPI(null).then((result) => {
-    // Tweet the new videos
-    twitter.tweetNotifs(result.items)
-    lastCall = moment().utc()
+    if (result.items.length) {
+      console.log('POST TWITTER')
+      console.log(result.items)
+      // Tweet the new videos
+      twitter.tweetNotifs(result.items)
+      lastId = result.items[0].id
+      console.log('new id : ', lastId)
+    }
+    console.log('New last call : ', lastId)
   }).catch((e) => {
     console.log(e)
   })
@@ -26,7 +32,7 @@ function notify () {
  * @return {Array<Object>}
  */
 async function callAPI (pageToken) {
-  let apiResult = await yt.getNewVideos(lastCall, pageToken)
+  let apiResult = await yt.getNewVideos(lastId, pageToken)
 
   if (apiResult.shouldRecall) {
     let additionnalItems = await callAPI(apiResult.nextToken)
