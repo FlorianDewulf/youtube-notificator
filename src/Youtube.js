@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const readline = require('readline')
 const { google } = require('googleapis')
+const logger = require('./logger')
 const OAuth2 = google.auth.OAuth2
 
 // If modifying these scopes, delete your previously saved credentials
@@ -188,7 +189,7 @@ class Youtube {
         filteredItems.push(item)
       }
     }
-    console.log('filteredItems : ', filteredItems)
+    logger.getLogger().info('filteredItems : ', JSON.stringify(filteredItems))
     return {
       items: filteredItems.map((filteredItem) => {
         return {
