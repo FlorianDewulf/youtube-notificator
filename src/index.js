@@ -3,7 +3,7 @@ const Youtube = require('./Youtube.js')
 const Twitter = require('./Twitter.js')
 
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') })
-let lastId = null
+let lastId = { value: null }
 let twitter = new Twitter()
 
 console.log('LAST ID', lastId)
@@ -17,10 +17,9 @@ function notify () {
       console.log(result.items)
       // Tweet the new videos
       twitter.tweetNotifs(result.items)
-      lastId = result.items[0].id
-      console.log('new id : ', lastId)
+      lastId.value = result.items[0].id
+      console.log('new id : ', lastId.value)
     }
-    console.log('New last call : ', lastId)
   }).catch((e) => {
     console.log(e)
   })

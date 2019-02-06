@@ -151,13 +151,23 @@ class Youtube {
           reject(err)
           return
         }
-        let processResult = this.processItems(response.data.items, lastId)
 
-        resolve({
-          items: processResult.items,
-          shouldRecall: processResult.shouldRecall,
-          nextToken: response.data.nextPageToken
-        })
+        if (lastId.value === null && response.data.items.length) {
+          lastId.value = response.data.items[0].id.videoId
+          resolve({
+            items: [],
+            shouldRecall: false,
+            nextToken: null
+          })
+        } else {
+          let processResult = this.processItems(response.data.items, lastId)
+
+          resolve({
+            items: processResult.items,
+            shouldRecall: processResult.shouldRecall,
+            nextToken: response.data.nextPageToken
+          })
+        }
       })
     })
   }
@@ -172,7 +182,7 @@ class Youtube {
     let filteredItems = []
     
     for (let item of items) {
-      if (item.id.videoId === lastId) {
+      if (item.id.videoId === lastId.value) {
         break
       } else {
         filteredItems.push(item)
